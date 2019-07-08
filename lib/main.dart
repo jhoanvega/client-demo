@@ -50,7 +50,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 controller: editingController,
                 decoration: InputDecoration(
                     labelText: "Buscar un cliente",
-                    hintText: "Ingrese RFC ó correo",
+                    hintText: "Escriba el RFC ó nombre de cliente",
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.all(Radius.circular(25.0)))),

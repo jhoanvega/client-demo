@@ -11,12 +11,14 @@ class _AltaCliente extends State<ClientPage> {
   final GlobalKey<ScaffoldState> _keyFormScal = new GlobalKey<ScaffoldState>();
   List<String> _colonias = new List<String>();
   String coloniaSelected;
-  bool activeAddress;
+  bool _visible = false;
+  FocusNode myFocusNode;
 
   @override
   void initState() {
     _colonias.addAll(["Seleccione una colonia", "Villas de santiago", "Sauces", "Lomas de Casa blanca"]);
     coloniaSelected = "Seleccione una colonia";
+    myFocusNode = new FocusNode();
   }
 
   @override
@@ -36,6 +38,7 @@ class _AltaCliente extends State<ClientPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: <Widget>[
                  TextFormField(
+                  autofocus: true,
                   decoration: const InputDecoration(
                     icon: const Icon(Icons.assignment_ind),
                     hintText: 'Ingresa RFC.',
@@ -58,70 +61,100 @@ class _AltaCliente extends State<ClientPage> {
                   validator: (value) =>
                       isValidEmail(value) ? null : 'Ingrese un correo valido.',
                   keyboardType: TextInputType.emailAddress,
-                ), RaisedButton(onPressed: null, child: new Text("Presione para agregar una direccion")),
-                activeAddress ? new Container() :
-                 TextFormField(
+                ),TextFormField(
                   decoration: const InputDecoration(
-                    icon: const Icon(Icons.home),
-                    hintText: 'Ingrese un codigo postal',
-                    labelText: 'Codigo postal',
+                    icon: const Icon(Icons.phone),
+                    hintText: 'Ingrese el telefono.',
+                    labelText: 'Telefono de contacto',
                   ),
                   validator: (value) =>
-                      isValidEmail(value) ? null : 'Ingrese un codigo postal.',
+                  isValidEmail(value) ? null : 'Ingrese un correo valido.',
                   keyboardType: TextInputType.emailAddress,
-                ), activeAddress ? new Container() :
-                 DropdownButtonFormField(
-                   validator: (value){
-                     if(value == "Seleccione una colonia"){
-                       return "Seleccione una colonia del listado";
-                     }
-                   },
-                   decoration: InputDecoration(icon: Icon(Icons.home)),
-                  value: coloniaSelected,
-                   hint: new Text("Seleccione una colonia"),
-                   items: _colonias
-                    .map((label) => DropdownMenuItem(
-                      child: Text(label),
-                      value: label,
-                      )).toList(),
-                     onChanged: (value) {
-                       setState(() {
-                         coloniaSelected = value;
-                       });
-                     }
-                ),activeAddress ? new Container() :
-                 TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.home),
-                    hintText: 'Ingrese la calle',
-                    labelText: 'Calle',
-                  ),
-                  validator: (value) =>
-                      isValidEmail(value) ? null : 'Ingrese una calle.',
-                  keyboardType: TextInputType.emailAddress,
-                ),activeAddress ? new Container() :
-                 TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.home),
-                    hintText: 'Ingrese el número exterior',
-                    labelText: '# exterior',
-                  ),
-                  validator: (value) => isValidEmail(value)
-                      ? null
-                      : 'Ingrese un numero exterior.',
-                  keyboardType: TextInputType.emailAddress,
-                ),activeAddress ? new Container() :
-                 TextFormField(
-                  decoration: const InputDecoration(
-                    icon: const Icon(Icons.home),
-                    hintText: 'Número el numero interior',
-                    labelText: '# interior',
-                  ),
-                  validator: (value) => isValidEmail(value)
-                      ? null
-                      : 'Ingrese un numero interior.',
-                  keyboardType: TextInputType.emailAddress,
+                ), FlatButton.icon(onPressed: (){
+                  setState(() {
+                    _visible = !_visible;
+                    FocusScope.of(context).requestFocus(myFocusNode);
+                  });
+                }, icon: Icon(Icons.home), label: new Text("Presione aquí para agregar la direccion"),),
+
+                 Visibility(
+                   visible: _visible,
+                   child: TextFormField(
+                     focusNode: myFocusNode,
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.edit_location),
+                      hintText: 'Ingrese un codigo postal',
+                      labelText: 'Codigo postal',
+                    ),
+                    validator: (value) =>
+                        isValidEmail(value) ? null : 'Ingrese un codigo postal.',
+                    keyboardType: TextInputType.emailAddress,
                 ),
+                 ),
+                 Visibility(
+                   visible: _visible,
+                   child: DropdownButtonFormField(
+                     validator: (value){
+                       if(value == "Seleccione una colonia"){
+                         return "Seleccione una colonia del listado";
+                       }
+                     },
+                     decoration: InputDecoration(icon: Icon(Icons.edit_location)),
+                    value: coloniaSelected,
+                     hint: new Text("Seleccione una colonia"),
+                     items: _colonias
+                      .map((label) => DropdownMenuItem(
+                        child: Text(label),
+                        value: label,
+                        )).toList(),
+                       onChanged: (value) {
+                         setState(() {
+                           coloniaSelected = value;
+                         });
+                       }
+                ),
+                 ),
+                 Visibility(
+                   visible: _visible,
+                   child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.edit_location),
+                      hintText: 'Ingrese la calle',
+                      labelText: 'Calle',
+                    ),
+                    validator: (value) =>
+                        isValidEmail(value) ? null : 'Ingrese una calle.',
+                    keyboardType: TextInputType.emailAddress,
+                ),
+                 ),
+                 Visibility(
+                   visible: _visible,
+                   child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.edit_location),
+                      hintText: 'Ingrese el número exterior',
+                      labelText: '# exterior',
+                    ),
+                    validator: (value) => isValidEmail(value)
+                        ? null
+                        : 'Ingrese un numero exterior.',
+                    keyboardType: TextInputType.emailAddress,
+                ),
+                 ),
+                 Visibility(
+                   visible: _visible,
+                   child: TextFormField(
+                    decoration: const InputDecoration(
+                      icon: const Icon(Icons.edit_location),
+                      hintText: 'Número el numero interior',
+                      labelText: '# interior',
+                    ),
+                    validator: (value) => isValidEmail(value)
+                        ? null
+                        : 'Ingrese un numero interior.',
+                    keyboardType: TextInputType.emailAddress,
+                ),
+                 ),
                 Padding(
                   padding: const EdgeInsets.all(18.0),
                   child: new RaisedButton(
